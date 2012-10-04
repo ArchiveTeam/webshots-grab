@@ -6,10 +6,35 @@ read_file = function(file)
   return data
 end
 
+albums = {}
+photos = {}
+videos = {}
 url_count = 0
 album_count = 0
 photo_count = 0
 video_count = 0
+
+previous_stats = ""
+
+print_stats = function()
+  s = " + Discovered: "
+  s = s..album_count.." album"
+  if album_count ~= 1 then
+    s = s.."s"
+  end
+  s = s..", "..photo_count.." photo"
+  if photo_count ~= 1 then
+    s = s.."s"
+  end
+  s = s..", "..video_count.." video"
+  if video_count ~= 1 then
+    s = s.."s"
+  end
+  if s ~= previous_stats then
+    print(s)
+    previous_stats = s
+  end
+end
 
 wget.callbacks.get_urls = function(file, url, is_css, iri)
   local urls = {}
@@ -47,16 +72,16 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
     end
 
     -- albums
-    for album_url in string.gmatch(html, "http://[^\"/]+/album/[^\"#/]+") do
+    for album_url in string.gmatch(html, "http://[^\"/]+/album/[^?\"#/]+") do
       table.insert(urls, { url=(album_url), link_expect_html=1 })
-      album_count = album_count + 1
+      local album_id = string.match(album_url, "[^/]+$")
+      if not albums[album_id] then
+        album_count = album_count + 1
+        albums[album_id] = true
+      end
     end
 
-    if album_count == 1 then
-      print(" + Discovered "..album_count.." album so far")
-    else
-      print(" + Discovered "..album_count.." albums so far")
-    end
+    print_stats()
   end
 
   -- people
@@ -122,16 +147,24 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
     -- photos
     for photo_url in string.gmatch(html, "http://[^\"/]+/photo/[a-zA-Z0-9]+") do
       table.insert(urls, { url=(photo_url), link_expect_html=1 })
-      photo_count = photo_count + 1
-    end
-
+      local photo_id = string.match(photo_url, "[^/]+$")
+      if not photos[photo_id] then
+        photo_count = photo_count + 1
+        photos[photo_id] = true
+      end
     end
 
     -- videos
     for video_url in string.gmatch(html, "http://[^\"/]+/video/[a-zA-Z0-9]+") do
       table.insert(urls, { url=(video_url), link_expect_html=1 })
-      video_count = video_count + 1
+      local video_id = string.match(video_url, "[^/]+$")
+      if not videos[video_id] then
+        video_count = video_count + 1
+        videos[video_id] = true
+      end
     end
+
+    print_stats()
   end
 
   -- photo
