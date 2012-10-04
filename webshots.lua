@@ -52,9 +52,9 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
     end
 
     if album_count == 1 then
-      print(" + Found "..album_count.." album so far")
+      print(" + Discovered "..album_count.." album so far")
     else
-      print(" + Found "..album_count.." albums so far")
+      print(" + Discovered "..album_count.." albums so far")
     end
   end
 
@@ -125,9 +125,9 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
     end
 
     if photo_count == 1 then
-      print(" + Found "..photo_count.." photo so far")
+      print(" + Discovered "..photo_count.." photo so far")
     else
-      print(" + Found "..photo_count.." photos so far")
+      print(" + Discovered "..photo_count.." photos so far")
     end
   end
 
