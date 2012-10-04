@@ -7,13 +7,15 @@ read_file = function(file)
 end
 
 url_count = 0
+album_count = 0
+photo_count = 0
 
 wget.callbacks.get_urls = function(file, url, is_css, iri)
   local urls = {}
 
   -- progress message
   url_count = url_count + 1
-  if url_count % 25 == 0 then
+  if url_count % 50 == 0 then
     print(" - Downloaded "..url_count.." URLs")
   end
 
@@ -21,6 +23,10 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
   local base = string.match(url, "^(http://community%.webshots%.com/user/[^?/]+)[^/]*$")
   if base then
     local html = read_file(file)
+
+    if base == url then
+      print(" + User profile loaded.")
+    end
 
     -- the tab pages
     table.insert(urls, { url=(base.."/profile"), link_expect_html=1 })
@@ -42,6 +48,13 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
     -- albums
     for album_url in string.gmatch(html, "http://[^\"/]+/album/[^\"#/]+") do
       table.insert(urls, { url=(album_url), link_expect_html=1 })
+      album_count = album_count + 1
+    end
+
+    if album_count == 1 then
+      print(" + Found "..album_count.." album so far")
+    else
+      print(" + Found "..album_count.." albums so far")
     end
   end
 
@@ -108,6 +121,13 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
     -- photos
     for photo_url in string.gmatch(html, "http://[^\"/]+/photo/[a-zA-Z0-9]+") do
       table.insert(urls, { url=(photo_url), link_expect_html=1 })
+      photo_count = photo_count + 1
+    end
+
+    if photo_count == 1 then
+      print(" + Found "..photo_count.." photo so far")
+    else
+      print(" + Found "..photo_count.." photos so far")
     end
   end
 
