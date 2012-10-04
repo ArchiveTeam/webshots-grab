@@ -64,7 +64,7 @@ project = Project(
   project_html = """
     <img class="project-logo" alt="Webshots logo" src="http://archiveteam.org/images/thumb/3/36/Webshots-logo-crop.png/120px-Webshots-logo-crop.png" />
     <h2>Webshots <span class="links"><a href="http://community.webshots.com/">Website</a> &middot; <a href="http://tracker.archiveteam.org/webshots/">Leaderboard</a></span></h2>
-    <p>Webshots becomes Smile and gets a beautiful photo screensaver.</p>
+    <p><i>Webshots</i> will soon become <i>Smile, by Webshots</i>. We archive the member photos.</p>
   """,
   utc_deadline = datetime.datetime(2012,12,1, 23,59,0)
 )
