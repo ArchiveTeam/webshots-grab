@@ -82,7 +82,7 @@ pipeline = Pipeline(
       "-e", "robots=off",
       "--page-requisites", "--span-hosts",
       "--lua-script", "webshots.lua",
-      "--ignore-regex", "agwebshots.112.2o7.net|track_pagetag=|ads.com.com|ag.tags.crwdcntrl.net|.googlesyndication.com|tags.bluekai.com",
+      "--reject-regex", "agwebshots.112.2o7.net|track_pagetag=|ads.com.com|ag.tags.crwdcntrl.net|.googlesyndication.com|tags.bluekai.com",
       "--timeout", "10",
       "--tries", "3",
       "--waitretry", "5",
