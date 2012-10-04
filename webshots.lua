@@ -9,6 +9,7 @@ end
 url_count = 0
 album_count = 0
 photo_count = 0
+video_count = 0
 
 wget.callbacks.get_urls = function(file, url, is_css, iri)
   local urls = {}
@@ -124,10 +125,12 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
       photo_count = photo_count + 1
     end
 
-    if photo_count == 1 then
-      print(" + Discovered "..photo_count.." photo so far")
-    else
-      print(" + Discovered "..photo_count.." photos so far")
+    end
+
+    -- videos
+    for video_url in string.gmatch(html, "http://[^\"/]+/video/[a-zA-Z0-9]+") do
+      table.insert(urls, { url=(video_url), link_expect_html=1 })
+      video_count = video_count + 1
     end
   end
 
@@ -174,6 +177,35 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
     if photo_url then
       table.insert(urls, { url=(photo_url) })
     end
+  end
+
+  -- video
+  local video_id = string.match(url, "^http://[^.]+%.webshots%.com/video/([a-zA-Z0-9]+)$")
+  if video_id then
+    local html = read_file(file)
+
+    -- all comments are visible, no pagination
+
+    -- video
+    local video_url, still_url, inline_photo_url = string.match(html, "writeFlashVideo%(\"([^\"]+)\", \"([^\"]+)\", \"([^\"]+)\"")
+    if video_url then
+      table.insert(urls, { url=video_url })
+    end
+    if still_url then
+      table.insert(urls, { url=still_url })
+    end
+    if inline_photo_url then
+      table.insert(urls, { url=inline_photo_url, link_expect_html=1 })
+    end
+  end
+
+  -- video thumbnails
+  local base = string.match(url, "^(http://videothumb%d+%.webshots%.com/.+_)%d%d%d_%d%.jpg$")
+  if base then
+    table.insert(urls, { url=(base.."001_0.jpg") })
+    table.insert(urls, { url=(base.."002_0.jpg") })
+    table.insert(urls, { url=(base.."003_0.jpg") })
+    table.insert(urls, { url=(base.."004_0.jpg") })
   end
 
   return urls
