@@ -14,7 +14,7 @@ from seesaw.tracker import *
 
 DATA_DIR = "data"
 USER_AGENT = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27"
-VERSION = "20121004.01"
+VERSION = "20121004.02"
 
 class PrepareDirectories(SimpleTask):
   def __init__(self):
@@ -90,6 +90,7 @@ pipeline = Pipeline(
       "--warc-header", "operator: Archive Team",
       "--warc-header", "webshots-dld-script-version: " + VERSION,
       "--warc-header", ItemInterpolation("webshots-username: %(item_name)s"),
+      ItemInterpolation("http://webshots.com/user/%(item_name)s"),
       ItemInterpolation("http://community.webshots.com/user/%(item_name)s")
     ],
     max_tries = 2,
