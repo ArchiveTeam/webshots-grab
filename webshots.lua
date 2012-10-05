@@ -1,9 +1,13 @@
 
 read_file = function(file)
-  local f = io.open(file)
-  local data = f:read("*all")
-  f:close()
-  return data
+  if file then
+    local f = io.open(file)
+    local data = f:read("*all")
+    f:close()
+    return data
+  else
+    return ""
+  end
 end
 
 albums = {}
