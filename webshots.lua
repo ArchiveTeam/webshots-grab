@@ -197,11 +197,13 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
   -- other sizes
   local photo_id = string.match(url, "^http://[^.]+%.webshots%.com/inlinePhoto%?photoId=([a-zA-Z0-9]+)")
   if photo_id then
-    -- contact the inlinePhoto api
-    local photo_sizes = { 100, 200, 425, 500, 600 }
-    for i, s in ipairs(photo_sizes) do
-      table.insert(urls, { url=("http://inlineapi.webshots.com/inlinePhoto?tab="..s.."&photoId="..photo_id.."&maxX="..s.."&maxY="..s.."&fitType=shrink&quality=85") })
-    end
+-- INLINEAPI.WEBSHOTS.COM is out of order
+
+--  -- contact the inlinePhoto api
+--  local photo_sizes = { 100, 200, 425, 500, 600 }
+--  for i, s in ipairs(photo_sizes) do
+--    table.insert(urls, { url=("http://inlineapi.webshots.com/inlinePhoto?tab="..s.."&photoId="..photo_id.."&maxX="..s.."&maxY="..s.."&fitType=shrink&quality=85") })
+--  end
   end
 
   -- other sizes, inline api
