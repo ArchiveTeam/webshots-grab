@@ -12,9 +12,8 @@ from seesaw.pipeline import *
 from seesaw.externalprocess import *
 from seesaw.tracker import *
 
-DATA_DIR = "data"
 USER_AGENT = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27"
-VERSION = "20121008.01"
+VERSION = "20121008.02"
 
 class PrepareDirectories(SimpleTask):
   def __init__(self):
@@ -22,7 +21,7 @@ class PrepareDirectories(SimpleTask):
 
   def process(self, item):
     item_name = item["item_name"]
-    dirname = "/".join(( DATA_DIR, item_name ))
+    dirname = "/".join(( item["data_dir"], item_name ))
 
     if os.path.isdir(dirname):
       shutil.rmtree(dirname)
@@ -30,7 +29,6 @@ class PrepareDirectories(SimpleTask):
     os.makedirs(dirname + "/files")
 
     item["item_dir"] = dirname
-    item["data_dir"] = DATA_DIR
     item["warc_file_base"] = "webshots.com-user-%s-%s" % (item_name, time.strftime("%Y%m%d-%H%M%S"))
 
 class MoveFiles(SimpleTask):
@@ -42,13 +40,6 @@ class MoveFiles(SimpleTask):
               "%(data_dir)s/%(warc_file_base)s.warc.gz" % item)
 
     shutil.rmtree("%(item_dir)s" % item)
-
-class DeleteFiles(SimpleTask):
-  def __init__(self):
-    SimpleTask.__init__(self, "DeleteFiles")
-
-  def process(self, item):
-    os.unlink("%(data_dir)s/%(warc_file_base)s.warc.gz" % item)
 
 def calculate_item_id(item):
   inline_photos = glob.glob("%(item_dir)s/files/community.webshots.com/inlinePhoto*" % item)
@@ -119,7 +110,6 @@ pipeline = Pipeline(
   SendDoneToTracker(
     tracker_url = "http://tracker.archiveteam.org/webshots",
     stats = ItemValue("stats")
-  ),
-  DeleteFiles()
+  )
 )
 
