@@ -3,7 +3,9 @@ import os
 import os.path
 import shutil
 import glob
+from distutils.version import StrictVersion
 
+import seesaw
 from seesaw.project import *
 from seesaw.config import *
 from seesaw.item import *
@@ -11,6 +13,11 @@ from seesaw.task import *
 from seesaw.pipeline import *
 from seesaw.externalprocess import *
 from seesaw.tracker import *
+
+
+if StrictVersion(seesaw.__version__) < StrictVersion("0.0.5"):
+  raise Exception("This pipeline needs seesaw version 0.0.5 or higher.")
+
 
 USER_AGENT = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27"
 VERSION = "20121008.02"
