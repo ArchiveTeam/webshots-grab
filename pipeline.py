@@ -20,7 +20,7 @@ if StrictVersion(seesaw.__version__) < StrictVersion("0.0.5"):
 
 
 USER_AGENT = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27"
-VERSION = "20121008.02"
+VERSION = "20121009.01"
 
 class PrepareDirectories(SimpleTask):
   def __init__(self):
@@ -80,7 +80,7 @@ pipeline = Pipeline(
       "-e", "robots=off",
       "--page-requisites", "--span-hosts",
       "--lua-script", "webshots.lua",
-      "--reject-regex", "agwebshots.112.2o7.net|track_pagetag=|ads.com.com|ag.tags.crwdcntrl.net|.googlesyndication.com|tags.bluekai.com",
+      "--reject-regex", "agwebshots.112.2o7.net|track_pagetag=|ads.com.com|ag.tags.crwdcntrl.net|.googlesyndication.com|tags.bluekai.com|player.swf\\?videoFile=",
       "--timeout", "30",
       "--tries", "10",
       "--waitretry", "5",
