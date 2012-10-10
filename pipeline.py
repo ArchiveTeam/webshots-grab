@@ -20,7 +20,7 @@ if StrictVersion(seesaw.__version__) < StrictVersion("0.0.5"):
 
 
 USER_AGENT = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27"
-VERSION = "20121009.01"
+VERSION = "20121010.01"
 
 class PrepareDirectories(SimpleTask):
   def __init__(self):
@@ -102,7 +102,7 @@ pipeline = Pipeline(
     id_function = calculate_item_id
   ),
   MoveFiles(),
-  LimitConcurrent(1,
+  LimitConcurrent(NumberConfigValue(min=1, max=4, default="2", name="shared:rsync_threads", title="Rsync threads", description="The maximum number of concurrent uploads."),
     RsyncUpload(
       target = ConfigInterpolation("fos.textfiles.com::webshotz/%s/", downloader),
       target_source_path = ItemInterpolation("%(data_dir)s/"),
@@ -110,6 +110,7 @@ pipeline = Pipeline(
         ItemInterpolation("%(warc_file_base)s.warc.gz")
       ],
       extra_args = [
+        "--partial",
         "--partial-dir", ".rsync-tmp"
       ]
     ),
