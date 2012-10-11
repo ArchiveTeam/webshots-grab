@@ -20,7 +20,7 @@ if StrictVersion(seesaw.__version__) < StrictVersion("0.0.5"):
 
 
 USER_AGENT = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27"
-VERSION = "20121010.01"
+VERSION = "20121011.01"
 
 class PrepareDirectories(SimpleTask):
   def __init__(self):
@@ -55,6 +55,22 @@ def calculate_item_id(item):
     return "null"
   else:
     return inline_photos[0] + "-" + inline_photos[n-1]
+
+class CurlUpload(ExternalProcess):
+  def __init__(self, target, filename):
+    args = [
+      "curl",
+      "--fail",
+      "--output", "/dev/null",
+      "--write-out", "Uploaded to %{url_effective}\\n",
+      "--location",
+      "--upload-file", filename,
+      target
+    ]
+    ExternalProcess.__init__(self, "CurlUpload",
+        args = args,
+        max_tries = None)
+
 
 
 project = Project(
@@ -102,18 +118,9 @@ pipeline = Pipeline(
     id_function = calculate_item_id
   ),
   MoveFiles(),
-  LimitConcurrent(NumberConfigValue(min=1, max=4, default="2", name="shared:rsync_threads", title="Rsync threads", description="The maximum number of concurrent uploads."),
-    RsyncUpload(
-      target = ConfigInterpolation("fos.textfiles.com::webshotz/%s/", downloader),
-      target_source_path = ItemInterpolation("%(data_dir)s/"),
-      files = [
-        ItemInterpolation("%(warc_file_base)s.warc.gz")
-      ],
-      extra_args = [
-        "--partial",
-        "--partial-dir", ".rsync-tmp"
-      ]
-    ),
+  CurlUpload(
+    ConfigInterpolation("http://tracker.archiveteam.org/webshots/upload/%s/", downloader),
+    ItemInterpolation("%(data_dir)s/%(warc_file_base)s.warc.gz")
   ),
   SendDoneToTracker(
     tracker_url = "http://tracker.archiveteam.org/webshots",
