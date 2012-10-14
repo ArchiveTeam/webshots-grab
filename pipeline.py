@@ -20,7 +20,7 @@ if StrictVersion(seesaw.__version__) < StrictVersion("0.0.5"):
 
 
 USER_AGENT = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27"
-VERSION = "20121013.01"
+VERSION = "20121014.01"
 
 class PrepareDirectories(SimpleTask):
   def __init__(self):
@@ -121,9 +121,11 @@ pipeline = Pipeline(
     id_function = calculate_item_id
   ),
   MoveFiles(),
-  CurlUpload(
-    ConfigInterpolation("http://tracker.archiveteam.org/webshots/upload/%s/", downloader),
-    ItemInterpolation("%(data_dir)s/%(warc_file_base)s.warc.gz")
+  LimitConcurrent(NumberConfigValue(min=1, max=6, default="2", name="shared:upload_threads", title="Upload threads", description="The maximum number of concurrent uploads."),
+    CurlUpload(
+      ConfigInterpolation("http://tracker.archiveteam.org/webshots/upload/%s/", downloader),
+      ItemInterpolation("%(data_dir)s/%(warc_file_base)s.warc.gz")
+    ),
   ),
   SendDoneToTracker(
     tracker_url = "http://tracker.archiveteam.org/webshots",
