@@ -21,7 +21,8 @@ video_count = 0
 previous_stats = ""
 
 print_stats = function()
-  s = " + Discovered: "
+  s = " - Downloaded: "..url_count
+  s = s.." URLs. Discovered: "
   s = s..album_count.." album"
   if album_count ~= 1 then
     s = s.."s"
@@ -35,7 +36,8 @@ print_stats = function()
     s = s.."s"
   end
   if s ~= previous_stats then
-    print(s)
+    io.stdout:write("\r"..s)
+    io.stdout:flush()
     previous_stats = s
   end
 end
@@ -46,7 +48,7 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
   -- progress message
   url_count = url_count + 1
   if url_count % 50 == 0 then
-    print(" - Downloaded "..url_count.." URLs")
+    print_stats()
   end
 
   -- user page (album list)
@@ -55,7 +57,7 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
     local html = read_file(file)
 
     if base == url then
-      print(" + User profile loaded.")
+      print("\n + User profile loaded.")
     end
 
     -- the tab pages
