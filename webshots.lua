@@ -185,8 +185,10 @@ wget.callbacks.get_urls = function(file, url, is_css, iri)
 
     -- image
     local image_url = string.match(html, "src=(http://image[^ \"]+)\_ph%.jpg")
-    table.insert(urls, { url=(image_url.."_ph.jpg") })
-    table.insert(urls, { url=(image_url.."_fs.jpg") })
+    if image_url then
+      table.insert(urls, { url=(image_url.."_ph.jpg") })
+      table.insert(urls, { url=(image_url.."_fs.jpg") })
+    end
 
     -- other sizes
     local other_sizes_url = string.match(html, "/inlinePhoto%?[^\"]+")
