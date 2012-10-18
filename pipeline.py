@@ -65,8 +65,8 @@ class CurlUpload(ExternalProcess):
       "--connect-timeout", "60",
       "--limit-rate", "10M",
       "--speed-limit", "1",        # minimum upload speed 1B/s
-      "--speed-time", "600",       # stop if speed < speed-limit for 600 seconds
-      "--header", "X-Curl-Limits: 10M,1,600",
+      "--speed-time", "900",       # stop if speed < speed-limit for 900 seconds
+      "--header", "X-Curl-Limits: 10M,1,900",
       "--write-out", "Upload server: %{url_effective}\\n",
       "--location",
       "--upload-file", filename,
