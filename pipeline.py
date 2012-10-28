@@ -20,7 +20,7 @@ if StrictVersion(seesaw.__version__) < StrictVersion("0.0.5"):
 
 
 USER_AGENT = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.20.25 (KHTML, like Gecko) Version/5.0.4 Safari/533.20.27"
-VERSION = "20121018.01"
+VERSION = "20121028.01"
 
 class PrepareDirectories(SimpleTask):
   def __init__(self):
@@ -63,10 +63,9 @@ class CurlUpload(ExternalProcess):
       "--fail",
       "--output", "/dev/null",
       "--connect-timeout", "60",
-      "--limit-rate", "10M",
       "--speed-limit", "1",        # minimum upload speed 1B/s
       "--speed-time", "900",       # stop if speed < speed-limit for 900 seconds
-      "--header", "X-Curl-Limits: 10M,1,900",
+      "--header", "X-Curl-Limits: inf,1,900",
       "--write-out", "Upload server: %{url_effective}\\n",
       "--location",
       "--upload-file", filename,
