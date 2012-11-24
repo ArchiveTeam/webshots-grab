@@ -14,7 +14,7 @@ USER_AGENT = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.20
 http_client = httpclient.HTTPClient()
 
 print "Loading task..."
-res = http_client.fetch("http://tracker.archiveteam.org:8123/request-discover", method="POST", body="n=25")
+res = http_client.fetch("http://tracker.archiveteam.org:8123/request-discover", method="POST", body="n=25&version=2")
 task = json.loads(res.body)
 # task = { "id": 123, "prefix": "ab03" }
 
@@ -59,7 +59,7 @@ for prefix in prefixes:
 
   if count < 100:
     # End of this query reached
-    next_prefixes = []
+    pass
   else:
     # Not specific enough, we need to go a level deeper
     for c in alphabet:
@@ -69,7 +69,7 @@ for prefix in prefixes:
 print
 print "Submitting results (%d usernames, %d new prefixes)..." % (len(usernames), len(next_prefixes))
 json_body = json.dumps({ "id": task["id"], "prefixes": prefixes, "usernames": usernames, "next_prefixes": next_prefixes })
-# print json_body
+print json_body
 res = http_client.fetch("http://tracker.archiveteam.org:8123/submit-discover", method="POST",
                         body=json_body, headers={"Content-Type": "application/json"})
 
