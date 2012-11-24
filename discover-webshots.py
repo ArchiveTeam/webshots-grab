@@ -43,7 +43,7 @@ for prefix in prefixes:
       res = http_client.fetch(req)
       matches = re.findall('http:\/\/community\.webshots\.com\/user\/([^/]+)', res.body)
       for value in matches:
-        if value != "my" and not re.match(r'^[-_a-zA-Z0-9]+$', value):
+        if value != "my" and re.match(r'^[-_a-zA-Z0-9]+$', value):
           usernames.append(value)
       count = res.body.count("http://community.webshots.com/user/")
       break
