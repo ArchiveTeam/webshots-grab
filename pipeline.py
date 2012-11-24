@@ -88,7 +88,8 @@ project = Project(
 )
 
 pipeline = Pipeline(
-  ExternalProcess("User discovery", ["./check-webshots.py"]),
+  ExternalProcess("User discovery 1", ["./discover-webshots.py"]),
+  ExternalProcess("User discovery 2", ["./check-webshots.py"]),
   GetItemFromTracker("http://tracker.archiveteam.org/webshots", downloader, VERSION),
   PrepareDirectories(),
   WgetDownload([ "./wget-lua",
