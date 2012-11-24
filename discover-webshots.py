@@ -69,7 +69,7 @@ for prefix in prefixes:
 print
 print "Submitting results (%d usernames, %d new prefixes)..." % (len(usernames), len(next_prefixes))
 json_body = json.dumps({ "id": task["id"], "prefixes": prefixes, "usernames": usernames, "next_prefixes": next_prefixes })
-print json_body
+# print json_body
 res = http_client.fetch("http://tracker.archiveteam.org:8123/submit-discover", method="POST",
                         body=json_body, headers={"Content-Type": "application/json"})
 
