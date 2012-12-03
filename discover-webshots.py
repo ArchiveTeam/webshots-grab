@@ -14,7 +14,7 @@ USER_AGENT = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US) AppleWebKit/533.20
 http_client = httpclient.HTTPClient()
 
 print "Loading task..."
-res = http_client.fetch("http://tracker.archiveteam.org:8123/request-discover", method="POST", body="n=25&version=2")
+res = http_client.fetch("http://tracker.archiveteam.org:8123/request-discover", method="POST", body="n=25&version=3")
 task = json.loads(res.body)
 # task = { "id": 123, "prefix": "ab03" }
 
@@ -36,7 +36,7 @@ for prefix in prefixes:
   while True:
     query = urllib.quote(prefix.ljust(3, "%") + "%")
     req = httpclient.HTTPRequest(
-        ("http://www.webshots.com/explore/member?action=userSearch&username=%s" % query),
+        ("http://community.webshots.com/explore/member?action=userSearch&username=%s" % query),
         connect_timeout=10, request_timeout=30,
         user_agent=USER_AGENT)
     try:
